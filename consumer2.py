@@ -1,4 +1,4 @@
-from kafka import KafkaConsumer, KafkaProducer
+from kafka import KafkaConsumer
 from const import *
 import sys
 
@@ -8,21 +8,12 @@ consumer = KafkaConsumer(bootstrap_servers=[BROKER_ADDR + ':' + BROKER_PORT])
 # Create consumer: Option 2 -- consume old events (uncomment to test -- and comment Option 1 above)
 #consumer = KafkaConsumer(bootstrap_servers=[BROKER_ADDR + ':' + BROKER_PORT], auto_offset_reset='earliest')
 
-producer2 = KafkaProducer(bootstrap_servers=[BROKER_ADDR + ':' + BROKER_PORT])
-
 try:
   topic = sys.argv[1]
-  topic2 = sys.argv[2]
 except:
-  print ('Usage: python3 consumer.py <topic_name> <topic2_name>')
+  print ('Usage: python3 consumer2.py <topic_name>')
   exit(1)
-
+  
 consumer.subscribe([topic])
 for msg in consumer:
   print (topic, ' received message: ', msg.value)
-  for i in range(1):
-    msg2 = 'My ' + str(i) + 'st message for topic ' + topic2
-    print ('Sending messagem: ', msg2)
-    producer2.send(topic2, value=msg2.encode())
-
-  producer2.flush()
